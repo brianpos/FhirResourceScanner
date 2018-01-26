@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FhirResourceScanner": {
+      "commandName": "Project",
+      "commandLineArgs": "https://sqlonfhir-stu3.azurewebsites.net/fhir/Encounter \"Brian (Telstra Health)\""
+    }
+  }
+}
