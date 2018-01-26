@@ -4,10 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using fm3 = stu3.Hl7.Fhir.Model;
-using fm2 = dstu2.Hl7.Fhir.Model;
-using System.Text.RegularExpressions;
 using System.IO;
 
 namespace ResourceScanner
