@@ -40,15 +40,15 @@ namespace FhirResourceScanner
                             string name;
                             if (i is r4.Hl7.Fhir.ElementModel.PocoNavigator)
                             {
-                                name = (i as r4.Hl7.Fhir.ElementModel.PocoNavigator).Name;
+                                name = (i as r4.Hl7.Fhir.ElementModel.PocoNavigator).Location;
                             }
                             else if (i is stu3.Hl7.Fhir.ElementModel.PocoNavigator)
                             {
-                                name = (i as stu3.Hl7.Fhir.ElementModel.PocoNavigator).Name;
+                                name = (i as stu3.Hl7.Fhir.ElementModel.PocoNavigator).Location;
                             }
                             else if (i is dstu2.Hl7.Fhir.ElementModel.PocoNavigator)
                             {
-                                name = (i as dstu2.Hl7.Fhir.ElementModel.PocoNavigator).Name;
+                                name = (i as dstu2.Hl7.Fhir.ElementModel.PocoNavigator).Location;
                             }
                             else
                             {

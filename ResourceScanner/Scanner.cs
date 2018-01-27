@@ -24,6 +24,8 @@ namespace ResourceScanner
         {
             public string PropertyName { get; set; }
 
+            public bool FromStructureDef { get; set; }
+
             public int UsageCount { get; set; }
         }
 
@@ -63,7 +65,7 @@ namespace ResourceScanner
                 foreach (var ed in instSD.Differential.Element)
                 {
                     if (!_properties.ContainsKey(ed.Path))
-                        _properties.Add(ed.Path, new ResultItem() { PropertyName = ed.Path, UsageCount = 0 });
+                        _properties.Add(ed.Path, new ResultItem() { PropertyName = ed.Path, UsageCount = 0, FromStructureDef = true });
                 }
             }
             if (_properties.ContainsKey(ResourceName))
@@ -78,14 +80,15 @@ namespace ResourceScanner
             {
                 if (item is fm3.FhirString str)
                 {
-                    string pname = $"{ResourceName}.{str.Value}";
+                    string pname = $"{str.Value}";
                     if (_properties.ContainsKey(pname))
                     {
                         _properties[pname].UsageCount++;
                     }
                     else
                     {
-                        _properties.Add(pname, new ResultItem() { PropertyName = pname, UsageCount = 1 });
+                        // dont count props not in the differential
+                    //    _properties.Add(pname, new ResultItem() { PropertyName = pname, UsageCount = 1 });
                     }
                 }
             }
@@ -101,10 +104,17 @@ namespace ResourceScanner
             result.TestScript = new fm3.ResourceReference(null, "FHIR Resource Property Usage Tester");
             result.Setup = new fm3.TestReport.SetupComponent();
 
+            // Calculate a score (the percentage of properties from the SD that have a value)
+            decimal propertiesInSd = _properties.Where(p => p.Value.FromStructureDef).Count();
+            decimal propertiesWithValue = _properties.Where(p => p.Value.FromStructureDef && p.Value.UsageCount > 0).Count();
+            if (propertiesInSd > 0)
+                result.Score = propertiesWithValue / propertiesInSd * 100;
+
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("<div xmlns=\"http://www.w3.org/1999/xhtml\">");
             sb.AppendLine($"<h2>Property Usage Evaluation Report: {ResourceName}</h2>");
             sb.AppendLine($"<p>Tested by: {testerName}</p>");
+            sb.AppendLine($"<p>Score: {result.Score:0} ({propertiesWithValue}/{propertiesInSd})</p>");
 
             foreach (var item in Sources)
             {
@@ -124,10 +134,10 @@ namespace ResourceScanner
             tc.Name = ResourceName;
             tc.Description = $"Property usage evaluation for {ResourceName}";
             sb.AppendLine("<table>");
-            sb.AppendLine($"<tr><th>Property Name</th><th>Usage Count</th></tr>");
+            sb.AppendLine($"<tr><th style='font-family: italic;'>Property Name</th><th style='font-family: italic;'>Usage Count</th></tr>");
             foreach (var item in this._properties.Values.OrderBy(s => s.PropertyName))
             {
-                sb.AppendLine($"<tr><td>{item.PropertyName}</td><td>{item.UsageCount}</td></tr>");
+                sb.AppendLine($"<tr><td>{item.PropertyName}{(item.FromStructureDef?"" : " *")}</td><td>{item.UsageCount}</td></tr>");
                 tc.Action.Add(new fm3.TestReport.TestActionComponent()
                 {
                     Operation = new fm3.TestReport.OperationComponent()
