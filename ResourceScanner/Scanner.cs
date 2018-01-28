@@ -87,8 +87,8 @@ namespace ResourceScanner
                     }
                     else
                     {
-                        // dont count props not in the differential
-                    //    _properties.Add(pname, new ResultItem() { PropertyName = pname, UsageCount = 1 });
+                        // don't count props not in the differential
+                        // _properties.Add(pname, new ResultItem() { PropertyName = pname, UsageCount = 1 });
                     }
                 }
             }

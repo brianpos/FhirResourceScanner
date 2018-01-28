@@ -33,29 +33,9 @@ namespace FhirResourceScanner
                 // Custom function that returns the name of the property, rather than its value
                 Hl7.FhirPath.FhirPathCompiler.DefaultSymbolTable.Add("element_def_path", (object f) =>
                 {
-                    if (f is IEnumerable<IElementNavigator>)
+                    if (f is IEnumerable<IElementNavigator> g)
                     {
-                        object[] bits = (f as IEnumerable<IElementNavigator>).Select(i =>
-                        {
-                            string name;
-                            if (i is r4.Hl7.Fhir.ElementModel.PocoNavigator)
-                            {
-                                name = (i as r4.Hl7.Fhir.ElementModel.PocoNavigator).Location;
-                            }
-                            else if (i is stu3.Hl7.Fhir.ElementModel.PocoNavigator)
-                            {
-                                name = (i as stu3.Hl7.Fhir.ElementModel.PocoNavigator).Location;
-                            }
-                            else if (i is dstu2.Hl7.Fhir.ElementModel.PocoNavigator)
-                            {
-                                name = (i as dstu2.Hl7.Fhir.ElementModel.PocoNavigator).Location;
-                            }
-                            else
-                            {
-                                name = "?";
-                            }
-                            return _replace.Replace(name, "");
-                        }).ToArray();
+                        object[] bits = g.Select(i => _replace.Replace(i.Location, "")).ToArray();
                         return FhirValueList.Create(bits);
                     }
                     return FhirValueList.Create(new object[] { "?" });
@@ -64,18 +44,7 @@ namespace FhirResourceScanner
                 {
                     if (f is IEnumerable<IElementNavigator>)
                     {
-                        object[] bits = (f as IEnumerable<IElementNavigator>).Select(i =>
-                        {
-                            if (i is stu3.Hl7.Fhir.ElementModel.PocoNavigator)
-                            {
-                                return (i as stu3.Hl7.Fhir.ElementModel.PocoNavigator).Name;
-                            }
-                            if (i is dstu2.Hl7.Fhir.ElementModel.PocoNavigator)
-                            {
-                                return (i as dstu2.Hl7.Fhir.ElementModel.PocoNavigator).Name;
-                            }
-                            return "?";
-                        }).ToArray();
+                        object[] bits = (f as IEnumerable<IElementNavigator>).Select(i => i.Name).ToArray();
                         return FhirValueList.Create(bits);
                     }
                     return FhirValueList.Create(new object[] { "?" });
@@ -84,18 +53,7 @@ namespace FhirResourceScanner
                 {
                     if (f is IEnumerable<IElementNavigator>)
                     {
-                        object[] bits = (f as IEnumerable<IElementNavigator>).Select(i =>
-                        {
-                            if (i is stu3.Hl7.Fhir.ElementModel.PocoNavigator)
-                            {
-                                return (i as stu3.Hl7.Fhir.ElementModel.PocoNavigator).Location;
-                            }
-                            if (i is dstu2.Hl7.Fhir.ElementModel.PocoNavigator)
-                            {
-                                return (i as dstu2.Hl7.Fhir.ElementModel.PocoNavigator).Location;
-                            }
-                            return "?";
-                        }).ToArray();
+                        object[] bits = (f as IEnumerable<IElementNavigator>).Select(i => i.Location).ToArray();
                         return FhirValueList.Create(bits);
                     }
                     return FhirValueList.Create(new object[] { "?" });
@@ -107,6 +65,10 @@ namespace FhirResourceScanner
                     {
                         object[] bits = (f as IEnumerable<IElementNavigator>).Select(i =>
                         {
+                            if (i is r4.Hl7.Fhir.ElementModel.PocoNavigator)
+                            {
+                                return (i as r4.Hl7.Fhir.ElementModel.PocoNavigator).CommonPath;
+                            }
                             if (i is stu3.Hl7.Fhir.ElementModel.PocoNavigator)
                             {
                                 return (i as stu3.Hl7.Fhir.ElementModel.PocoNavigator).CommonPath;
@@ -128,6 +90,10 @@ namespace FhirResourceScanner
                     {
                         object[] bits = (f as IEnumerable<IElementNavigator>).Select(i =>
                         {
+                            if (i is r4.Hl7.Fhir.ElementModel.PocoNavigator)
+                            {
+                                return (i as r4.Hl7.Fhir.ElementModel.PocoNavigator).ShortPath;
+                            }
                             if (i is stu3.Hl7.Fhir.ElementModel.PocoNavigator)
                             {
                                 return (i as stu3.Hl7.Fhir.ElementModel.PocoNavigator).ShortPath;
