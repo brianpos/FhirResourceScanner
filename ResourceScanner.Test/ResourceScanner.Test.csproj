@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.2.1" />
     <PackageReference Include="Hl7.Fhir.DSTU2" Version="0.94.0" />
     <PackageReference Include="Hl7.Fhir.R4" Version="0.94.0-beta3" />
     <PackageReference Include="Hl7.Fhir.Specification.STU3" Version="0.94.0" />
@@ -17,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FhirResourceScanner\FhirResourceScanner.csproj" />
     <ProjectReference Include="..\ResourceScanner\ResourceScanner.csproj" />
   </ItemGroup>
 
@@ -25,13 +27,9 @@
       <ReferencePath Condition="'%(FileName)' == 'Hl7.Fhir.DSTU2.Core'">
         <Aliases>dstu2</Aliases>
       </ReferencePath>
-    </ItemGroup>
-    <ItemGroup>
       <ReferencePath Condition="'%(FileName)' == 'Hl7.Fhir.STU3.Core'">
         <Aliases>stu3</Aliases>
       </ReferencePath>
-    </ItemGroup>
-    <ItemGroup>
       <ReferencePath Condition="'%(FileName)' == 'Hl7.Fhir.R4.Core'">
         <Aliases>r4</Aliases>
       </ReferencePath>

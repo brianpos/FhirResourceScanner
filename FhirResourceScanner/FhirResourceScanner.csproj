@@ -3,9 +3,12 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.2.1" />
     <PackageReference Include="Hl7.Fhir.DSTU2" Version="0.94.0" />
     <PackageReference Include="Hl7.Fhir.R4" Version="0.94.0-beta3" />
     <PackageReference Include="Hl7.Fhir.Specification.STU3" Version="0.94.0" />
@@ -16,18 +19,22 @@
     <ProjectReference Include="..\ResourceScanner\ResourceScanner.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <RuntimeIdentifiers>win10-x64;osx.10.11-x64</RuntimeIdentifiers>
+    <Authors>Brian Postlethwaite</Authors>
+    <Company />
+    <Description>Scan over input files (or web resources) to process the usage of the properties in the core FHIR resources.</Description>
+    <Version>1.0.1</Version>
+  </PropertyGroup>
+
   <Target Name="ChangeAliasesOfStrongNameAssemblies" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
     <ItemGroup>
       <ReferencePath Condition="'%(FileName)' == 'Hl7.Fhir.DSTU2.Core'">
         <Aliases>dstu2</Aliases>
       </ReferencePath>
-    </ItemGroup>
-    <ItemGroup>
       <ReferencePath Condition="'%(FileName)' == 'Hl7.Fhir.STU3.Core'">
         <Aliases>stu3</Aliases>
       </ReferencePath>
-    </ItemGroup>
-    <ItemGroup>
       <ReferencePath Condition="'%(FileName)' == 'Hl7.Fhir.R4.Core'">
         <Aliases>r4</Aliases>
       </ReferencePath>
