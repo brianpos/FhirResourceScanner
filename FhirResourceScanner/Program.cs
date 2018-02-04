@@ -42,6 +42,7 @@ namespace FhirResourceScanner
                 }
                 else if (System.IO.File.Exists(args.filename))
                 {
+                    Console.WriteLine($"Scanning {args.filename}");
                     Resource resource = null;
                     var fi = new System.IO.FileInfo(args.filename);
                     if (fi.Extension == ".json")
@@ -100,14 +101,26 @@ namespace FhirResourceScanner
 
         private static void ScanResourcesFromServer(ScannerParameters args, stu3::Hl7.Fhir.Rest.FhirClient server, ResourceScanner.Scanner scanner)
         {
+            Console.WriteLine($"Scanning {args.url}");
             Resource resource = server.Get(args.url);
             if (resource is Bundle bundle)
             {
-                // TODO: scan the bundle
+                if (bundle.Total.HasValue)
+                    Console.WriteLine($"    Total: {bundle.Total.Value}");
                 foreach (var entry in bundle.Entry.Select(e => e.Resource))
                 {
                     if (entry != null)
                         scanner.ScanResourceInstance(entry, args.url);
+                }
+                while (bundle?.NextLink != null)
+                {
+                    Console.WriteLine($"Continuing {bundle.NextLink.OriginalString}");
+                    bundle = server.Get(bundle.NextLink.OriginalString) as Bundle;
+                    foreach (var entry in bundle?.Entry.Select(e => e.Resource))
+                    {
+                        if (entry != null)
+                            scanner.ScanResourceInstance(entry, args.url);
+                    }
                 }
             }
             else
