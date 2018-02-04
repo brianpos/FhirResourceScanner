@@ -1,10 +1,13 @@
 ﻿extern alias stu3;
 extern alias dstu2;
+extern alias r4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using fm2 = dstu2.Hl7.Fhir.Model;
 using fm3 = stu3.Hl7.Fhir.Model;
+using fm4 = r4.Hl7.Fhir.Model;
 using System.IO;
 
 namespace ResourceScanner
@@ -56,11 +59,13 @@ namespace ResourceScanner
             // Prepare the property list from the Structure Definition
             if (!_properties.ContainsKey(ResourceName))
             {
-                // var source = Hl7.Fhir.Specification.Source.ZipSource.CreateValidationSource();
-                var sourceSD = new Hl7.Fhir.Specification.Source.ZipSource(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "specification.zip"));
+                var sourceSD = new stu3.Hl7.Fhir.Specification.Source.ZipSource(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "specification.zip"));
                 var instSD = sourceSD.ResolveByUri("http://hl7.org/fhir/StructureDefinition/" + resource.TypeName) as fm3.StructureDefinition;
                 if (instSD == null)
-                    instSD = new stu3::Hl7.Fhir.Serialization.FhirXmlParser().Parse<fm3.StructureDefinition>(System.IO.File.ReadAllText($"{this.ResourceName}-sd.xml"));
+                {
+                    Console.WriteLine($"Unable to load the StructureDefinition for {resource.TypeName}");
+                    return;
+                }
 
                 foreach (var ed in instSD.Differential.Element)
                 {
@@ -74,7 +79,6 @@ namespace ResourceScanner
             }
 
             // Now process this actual instance
-            stu3.Hl7.Fhir.FhirPath.ElementNavFhirExtensions.PrepareFhirSymbolTableFunctions();
             var results = stu3.Hl7.Fhir.FhirPath.ElementNavFhirExtensions.Select(resource, "descendants().element_def_path()");
             foreach (var item in results)
             {
