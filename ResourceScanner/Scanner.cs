@@ -59,7 +59,7 @@ namespace ResourceScanner
             // Prepare the property list from the Structure Definition
             if (!_properties.ContainsKey(ResourceName))
             {
-                var sourceSD = new stu3.Hl7.Fhir.Specification.Source.ZipSource(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "specification.zip"));
+                var sourceSD = new Hl7.Fhir.Specification.Source.ZipSource(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "specification.zip"));
                 var instSD = sourceSD.ResolveByUri("http://hl7.org/fhir/StructureDefinition/" + resource.TypeName) as fm3.StructureDefinition;
                 if (instSD == null)
                 {
